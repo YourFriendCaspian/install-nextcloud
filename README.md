@@ -15,4 +15,4 @@ If you have configured your Nextcloud you have the opportunity to issue the seco
 
 Cheers, Carsten Rieger IT-Services
 
-https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/
+<a href="https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/" target="_blank">Build your Nextcloud Server using one shell scrip</a>
