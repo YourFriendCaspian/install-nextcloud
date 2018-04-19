@@ -1,5 +1,5 @@
 # install-nextcloud
-Install and optimize Nextcloud (based on Ubuntu 16.04.x LTS 64Bit)using shell scripts
+Install, optimize and harden your self hosted Nextcloud (based on Ubuntu 16.04.x LTS 64Bit) using two shell scripts only.
 
 The initial script called "install-nextcloud.sh" will install your self hosted Nextcloud within few minutes fully automated. Your server will be built of:
 
