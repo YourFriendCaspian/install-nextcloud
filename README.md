@@ -1,7 +1,7 @@
 # install-nextcloud
 Scripts to install and optimize Nextcloud (based on Ubuntu 16.04.x LTS 64Bit) with NGINX, MariaDB, PHP, Redis-Server, fail2ban and ufw
 
-This install-nextcloud.sh script will install your self hosted Nextcloud within few minutes and fully automated. Your server will be built consisting of:
+The initial script called "install-nextcloud.sh" will install your self hosted Nextcloud within few minutes fully automated. Your server will be built of:
 
     MariaDB
     Nextcloud 13.0.1
@@ -11,8 +11,9 @@ This install-nextcloud.sh script will install your self hosted Nextcloud within 
     Redis-Server
 
 The only precondition for this script is to use Ubuntu 16.04.4 LTS 64Bit as your server OS.
-If you have configured your Nextcloud you have the opportunity to issue the second script (optimizations.sh), which will optimize your Nextcloud (cache, previews, cron etc.) and install + configure fail2ban and ufw to harden your Nextcloud.
+
+If you have configured your Nextcloud afterwards in your preferred browser issue the second script called "optimizations.sh" to  optimize your Nextcloud instance (cache, previews, cron etc.) and install & configure fail2ban with ufw to harden your Nextcloud.
 
 Cheers, Carsten Rieger IT-Services
 
-https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/
+Find out more information: <a href="https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/" target="_blank">Build your Nextcloud Server using shell scripts only</a>
