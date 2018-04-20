@@ -7,30 +7,36 @@
 # Version 1.0: initial script
 #######################################################
 #!/bin/bash
+###global function to update and cleanup the environment
 function update_and_clean() {
 apt update
 apt upgrade -y
 apt autoclean -y
 apt autoremove -y
 }
+###global function to restart all cloud services
 function restart_all_services() {
 /usr/sbin/service nginx restart
 /usr/sbin/service mysql restart
 /usr/sbin/service redis-server restart
 /usr/sbin/service php7.2-fpm restart
 }
+###global function to scan Nextcloud data and generate an overview for fail2ban & ufw
 function nextcloud_scan_data() {
 sudo -u www-data php /var/www/nextcloud/occ files:scan --all
 sudo -u www-data php /var/www/nextcloud/occ files:scan-app-data
 fail2ban-client status nextcloud
 ufw status verbose
 }
+###backup of the effected file
 cp /var/www/nextcloud/.user.ini /var/www/nextcloud/.user.ini.bak
+###apply optimizations
 sudo -u www-data sed -i "s/upload_max_filesize=.*/upload_max_filesize=10240M/" /var/www/nextcloud/.user.ini
 sudo -u www-data sed -i "s/post_max_size=.*/post_max_size=10240M/" /var/www/nextcloud/.user.ini
 sudo -u www-data sed -i "s/output_buffering=.*/output_buffering='Off'/" /var/www/nextcloud/.user.ini
 sudo -u www-data cp /var/www/nextcloud/config/config.php /var/www/nextcloud/config/config.php.bak
 sudo -u www-data php /var/www/nextcloud/occ background:cron
+###apply optimizations to Nextclouds config.php
 sed -i '/);/d' /var/www/nextcloud/config/config.php
 cat <<EOF >>/var/www/nextcloud/config/config.php
 'activity_expire_days' => 14,
@@ -82,7 +88,9 @@ array (
 EOF
 restart_all_services
 update_and_clean
+###installfail2ban
 apt install fail2ban -y
+###create a fail2ban Nextcloud filter 
 touch /etc/fail2ban/filter.d/nextcloud.conf
 cat <<EOF >/etc/fail2ban/filter.d/nextcloud.conf
 [Definition]
@@ -90,6 +98,7 @@ failregex=^{"reqId":".*","remoteAddr":".*","app":"core","message":"Login failed:
 ^{"reqId":".*","level":2,"time":".*","remoteAddr":".*","app":"core".*","message":"Login failed: '.*' \(Remote IP: '<HOST>'\)".*}\$
 ^.*\"remoteAddr\":\"<HOST>\".*Trusted domain error.*\$
 EOF
+###create a fail2ban Nextcloud jail
 touch /etc/fail2ban/jail.d/nextcloud.local
 cat <<EOF >/etc/fail2ban/jail.d/nextcloud.local
 [nextcloud]
@@ -104,14 +113,20 @@ findtime = 36000
 logpath = /var/nc_data/nextcloud.log
 EOF
 update_and_clean
+###install ufw
 apt install ufw -y
+###open firewall ports 80+443 for http(s)
 ufw allow 80/tcp
 ufw allow 443/tcp
+###open firewall port 22 for SSH
 ufw allow 22/tcp
+###enable UFW (autostart)
 ufw enable
+###restart fail2ban, ufw and redis-server services
 /usr/sbin/service ufw restart
 /usr/sbin/service fail2ban restart
 /usr/sbin/service redis-server restart
+###clean up redis-server
 redis-cli -s /var/run/redis/redis.sock <<EOF
 FLUSHALL
 quit
