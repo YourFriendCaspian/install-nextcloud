@@ -26,7 +26,7 @@ sed -i '/ssl-cert-snakeoil/d' /etc/nginx/ssl.conf
 sed -i "s/server_name.*;/server_name $DYNDNSNAME;/" /etc/nginx/conf.d/nextcloud.conf
 sed -in 's/YOUR.DEDYN.IO/'$DYNDNSNAME'/' /etc/nginx/ssl.conf
 sed -i s/\#\ssl/\ssl/g /etc/nginx/ssl.conf
-sed -i '$a#ssl_dhparam /etc/ssl/certs/dhparam.pem;' /etc/nginx/ssl.conf
+sed -i s/ssl_dhparam/\#ssl_dhparam/g /etc/nginx/ssl.conf
 sudo -u www-data sed -in 's/'$YOURSERVERNAME'/'$DYNDNSNAME'/' /var/www/nextcloud/config/config.php
 }
 function errorSSL() {
