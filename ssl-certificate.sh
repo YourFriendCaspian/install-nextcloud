@@ -1,4 +1,3 @@
-#!/bin/bash
 # Carsten Rieger IT-Services
 # SSL-CERTIFICATE.SH
 # Version 1.0
@@ -15,19 +14,10 @@ function restart_all_services() {
 /usr/sbin/service redis-server restart
 /usr/sbin/service php7.2-fpm restart
 }
-function clean4SSL() {
+function copy4SSL() {
 cp /etc/nginx/conf.d/nextcloud.conf /etc/nginx/conf.d/nextcloud.conf.orig
 cp /etc/nginx/ssl.conf /etc/nginx/ssl.conf.orig
 cp /var/www/nextcloud/config/config.php /var/www/nextcloud/config/config.php.orig
-declare -l YOURSERVERNAME
-declare -l DYNDNSNAME
-YOURSERVERNAME=$(hostname)
-sed -i '/ssl-cert-snakeoil/d' /etc/nginx/ssl.conf
-sed -i "s/server_name.*;/server_name $DYNDNSNAME;/" /etc/nginx/conf.d/nextcloud.conf
-sed -in 's/YOUR.DEDYN.IO/'$DYNDNSNAME'/' /etc/nginx/ssl.conf
-sed -i s/\#\ssl/\ssl/g /etc/nginx/ssl.conf
-sed -i s/ssl_dhparam/\#ssl_dhparam/g /etc/nginx/ssl.conf
-sudo -u www-data sed -in 's/'$YOURSERVERNAME'/'$DYNDNSNAME'/' /var/www/nextcloud/config/config.php
 }
 function errorSSL() {
 clear
@@ -40,12 +30,21 @@ echo "Then retry..."
 add-apt-repository ppa:certbot/certbot -y
 update_and_clean
 apt install letsencrypt -y
+declare -l DYNDNSNAME
+declare -l YOURSERVERNAME
+YOURSERVERNAME=$(hostname)
 read -p "Your domain: " DYNDNSNAME
 letsencrypt certonly -a webroot --webroot-path=/var/www/letsencrypt --rsa-key-size 4096 -d $DYNDNSNAME
 if [ ! -d "/etc/letsencrypt/live" ]; then
 errorSSL
 else
-clean4SSL
+copy4SSL
+sed -i '/ssl-cert-snakeoil/d' /etc/nginx/ssl.conf
+sed -i "s/server_name.*;/server_name $DYNDNSNAME;/" /etc/nginx/conf.d/nextcloud.conf
+sed -in 's/YOUR.DEDYN.IO/'$DYNDNSNAME'/' /etc/nginx/ssl.conf
+sed -i s/\#\ssl/\ssl/g /etc/nginx/ssl.conf
+sed -i s/ssl_dhparam/\#ssl_dhparam/g /etc/nginx/ssl.conf
+sudo -u www-data sed -in 's/'$YOURSERVERNAME'/'$DYNDNSNAME'/' /var/www/nextcloud/config/config.php
 restart_all_services
 clear
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++"
