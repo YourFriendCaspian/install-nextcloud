@@ -16,4 +16,4 @@ Configure your Nextcloud in your preferred browser and participate of the opport
 
 Ready to go? Let's start:
 
-Find out more information: <a href="https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/" target="_blank">Build your Nextcloud Server using shell scripts only</a>
+Find out more information: <a href="https://www.c-rieger.de/spawn-your-nextcloud-server-using-one-shell-script/" target='_blank'>Build your Nextcloud Server using shell scripts only</a>
