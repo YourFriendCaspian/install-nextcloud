@@ -7,12 +7,14 @@
 # Version 1.0: initial script
 #######################################################
 #!/bin/bash
+###global function to update and cleanup the environment
 function update_and_clean() {
 apt update
 apt upgrade -y
 apt autoclean -y
 apt autoremove -y
 }
+###global function to restart all cloud services
 function restart_all_services() {
 /usr/sbin/service nginx restart
 /usr/sbin/service mysql restart
@@ -21,14 +23,19 @@ function restart_all_services() {
 }
 cd /usr/local/src
 update_and_clean
+###prepare the server environment
 apt install software-properties-common python-software-properties zip unzip screen curl ffmpeg libfile-fcntllock-perl -y
 apt remove nginx nginx-common nginx-full -y --allow-change-held-packages
+###add the neccessary sources
 sed -i '$adeb http://nginx.org/packages/ubuntu/ xenial nginx' /etc/apt/sources.list
 sed -i '$adeb-src http://nginx.org/packages/ubuntu/ xenial nginx' /etc/apt/sources.list
 wget http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key
 update_and_clean
+###instal NGINX
 apt install nginx -y
+###enable NGINX autostart
 systemctl enable nginx.service
+### prepare the NGINX
 mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak && touch /etc/nginx/nginx.conf
 cat <<EOF >/etc/nginx/nginx.conf
 user www-data;
@@ -67,14 +74,20 @@ resolver_timeout 10s;
 include /etc/nginx/conf.d/*.conf;
 }
 EOF
+###restart NGINX
 service nginx restart
+###create folders
 mkdir -p /var/nc_data /var/www/letsencrypt /usr/local/tmp/cache /usr/local/tmp/sessions /usr/local/tmp/apc /upload_tmp
+###apply permissions
 chown -R www-data:www-data /upload_tmp /var/nc_data /var/www
 chown -R www-data:root /usr/local/tmp/sessions /usr/local/tmp/cache /usr/local/tmp/apc
+### prepare the environment for PHP
 apt install language-pack-en-base -y
 sudo LC_ALL=en_US.UTF-8 add-apt-repository ppa:ondrej/php -y
 update_and_clean
+###install PHP
 apt install php7.2-fpm php7.2-gd php7.2-mysql php7.2-curl php7.2-xml php7.2-zip php7.2-intl php7.2-mbstring php7.2-json php7.2-bz2 php7.2-ldap php-apcu imagemagick php-imagick -y
+###adjust PHP
 cp /etc/php/7.2/fpm/pool.d/www.conf /etc/php/7.2/fpm/pool.d/www.conf.bak
 cp /etc/php/7.2/cli/php.ini /etc/php/7.2/cli/php.ini.bak
 cp /etc/php/7.2/fpm/php.ini /etc/php/7.2/fpm/php.ini.bak
@@ -155,10 +168,14 @@ sed -i '$atmpfs /var/tmp tmpfs defaults,noatime,nosuid,nodev,noexec,mode=1777 0 
 sed -i '$atmpfs /usr/local/tmp/apc tmpfs defaults,uid=33,size=300M,noatime,nosuid,nodev,noexec,mode=1777 0 0' /etc/fstab
 sed -i '$atmpfs /usr/local/tmp/cache tmpfs defaults,uid=33,size=300M,noatime,nosuid,nodev,noexec,mode=1777 0 0' /etc/fstab
 sed -i '$atmpfs /usr/local/tmp/sessions tmpfs defaults,uid=33,size=300M,noatime,nosuid,nodev,noexec,mode=1777 0 0' /etc/fstab
+###make use of RAMDISK
 mount -a
+###restart PHP and NGINX
 service php7.2-fpm restart
 service nginx restart
+###install MariaDB
 apt install mariadb-server -y
+###configure MariaDB
 mv /etc/mysql/my.cnf /etc/mysql/my.cnf.bak
 touch /etc/mysql/my.cnf
 cat <<EOF >/etc/mysql/my.cnf
@@ -194,15 +211,19 @@ innodb_large_prefix=on
 innodb_file_format=barracuda
 innodb_file_per_table=1
 EOF
+###restart MariaDB
 service mysql restart && mysql -uroot <<EOF
+###create Nextclouds DB and User
 CREATE DATABASE nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 CREATE USER nextcloud@localhost identified by 'nextcloud';
 GRANT ALL PRIVILEGES on nextcloud.* to nextcloud@localhost;
 FLUSH privileges;
 EOF
 update_and_clean
+###install Redis-Server
 apt install redis-server php-redis -y
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
+###adjust Redis_Server
 sed -i "s/port 6379/port 0/" /etc/redis/redis.conf
 sed -i s/\#\ unixsocket/\unixsocket/g /etc/redis/redis.conf
 sed -i "s/unixsocketperm 700/unixsocketperm 770/" /etc/redis/redis.conf
@@ -210,7 +231,9 @@ sed -i "s/# maxclients 10000/maxclients 512/" /etc/redis/redis.conf
 usermod -a -G redis www-data
 cp /etc/sysctl.conf /etc/sysctl.conf.bak && sed -i '$avm.overcommit_memory = 1' /etc/sysctl.conf
 cp /etc/rc.local /etc/rc.local.bak && sed -i '$i \sysctl -w net.core.somaxconn=65535' /etc/rc.local
+###install self signed certificates
 apt install ssl-cert -y
+###prepare NGINX for Nextcloud and SSL
 mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
 touch /etc/nginx/conf.d/default.conf
 cat <<EOF >/etc/nginx/conf.d/nextcloud.conf
@@ -368,10 +391,14 @@ fastcgi_cache_methods GET HEAD;
 EOF
 sed -i s/\#\include/\include/g /etc/nginx/nginx.conf
 sed -i "s/server_name YOUR.DEDYN.IO;/server_name $(hostname);/" /etc/nginx/conf.d/nextcloud.conf
+###create Nextclouds cronjob
 (crontab -u www-data -l ; echo "*/15 * * * * php -f /var/www/nextcloud/cron.php > /dev/null 2>&1") | crontab -u www-data -
+###restart NGINX
 service nginx restart
+###Download Nextclouds latest release and extract it
 wget https://download.nextcloud.com/server/releases/latest.tar.bz2
 tar -xjf latest.tar.bz2 -C /var/www
+###apply permissions
 chown -R www-data:www-data /var/www/
 rm latest.tar.bz2
 update_and_clean
