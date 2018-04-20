@@ -1,8 +1,11 @@
+#######################################################
 # Carsten Rieger IT-Services
 # OPTIMIZATIONS.SH
 # Version 1.1
-# added funtions to make code cleaner, thx @techandme.se
 # April 19th, 2018
+# version 1.1: added functions
+# Version 1.0: initial script
+#######################################################
 #!/bin/bash
 function update_and_clean() {
 apt update
