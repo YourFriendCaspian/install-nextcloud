@@ -5,6 +5,7 @@
 # April 20th, 2018
 # Version 1.0: initial script
 #######################################################
+#!/bin/bash
 ###global function to update and cleanup the environment
 function update_and_clean() {
 apt update
