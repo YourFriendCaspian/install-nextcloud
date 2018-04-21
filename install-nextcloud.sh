@@ -3,7 +3,8 @@
 # INSTALL-NEXTCLOUD.SH
 # Version 1.2
 # April 21st, 2018
-# version 1.2: changed the process of creating the Nextcloud db & user
+# version 1.2: changed the process of creating the NC
+#              db/user, added mysql_secure_installation
 # version 1.1: added functions
 # Version 1.0: initial script
 #######################################################
