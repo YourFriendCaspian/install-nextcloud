@@ -1,8 +1,9 @@
 #######################################################
 # Carsten Rieger IT-Services
 # INSTALL-NEXTCLOUD.SH
-# Version 1.1
-# April 19th, 2018
+# Version 1.2
+# April 21st, 2018
+# version 1.2: changed the process of creating the Nextcloud db & user
 # version 1.1: added functions
 # Version 1.0: initial script
 #######################################################
@@ -211,14 +212,31 @@ innodb_large_prefix=on
 innodb_file_format=barracuda
 innodb_file_per_table=1
 EOF
-###restart MariaDB
+clear
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo "The Nextcloud-DB username and the Nextcloud-DB password - Attention: case-sensitive:"
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo "Keep both in mind - you will be asked for while finishing the Nextcloud-Wizard!"
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo ""
+read -p "Nextcloud DB-Username: " NEXTCLOUDDBUSER
+echo "Your Nextcloud-DB user: "$NEXTCLOUDDBUSER
+echo ""
+read -p "Nextcloud DB-Password: " NEXTCLOUDDBPASSWORD
+echo "Your Nextcloud-DB password: "$NEXTCLOUDDBPASSWORD
+echo ""
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo ""
+###restart MariaDB server andconnect to MariaDB
 service mysql restart && mysql -uroot <<EOF
 ###create Nextclouds DB and User
 CREATE DATABASE nextcloud CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-CREATE USER nextcloud@localhost identified by 'nextcloud';
-GRANT ALL PRIVILEGES on nextcloud.* to nextcloud@localhost;
+CREATE USER $NEXTCLOUDDBUSER@localhost identified by '$NEXTCLOUDDBPASSWORD';
+GRANT ALL PRIVILEGES on nextcloud.* to $NEXTCLOUDDBUSER@localhost;
 FLUSH privileges;
 EOF
+###harden your MariDB server
+mysql_secure_installation
 update_and_clean
 ###install Redis-Server
 apt install redis-server php-redis -y
