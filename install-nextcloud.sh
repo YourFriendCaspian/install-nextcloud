@@ -1,8 +1,9 @@
 #######################################################
 # Carsten Rieger IT-Services
 # INSTALL-NEXTCLOUD.SH
-# Version 1.2
-# April 21st, 2018
+# Version 1.3
+# April 23rd, 2018
+# version 1.3: Nextcloud will silently be installed
 # version 1.2: changed the process of creating the NC
 #              db/user, added mysql_secure_installation
 # version 1.1: added functions
@@ -423,12 +424,34 @@ rm latest.tar.bz2
 update_and_clean
 restart_all_services
 clear
-echo "###############################################################################"
-echo " Nextcloud is up and running. Please open your browser and call:"
-echo "###############################################################################"
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo "The Nextcloud-Administrator and Password - Attention: password is case-sensitive:"
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echo ""
-echo "                 https://$(hostname)"
+echo "Your Nextcloud-DB user: "$NEXTCLOUDDBUSER
 echo ""
-echo " and confirm the upcoming ssl warning caused by the self-signed certificates. "
-echo "###############################################################################"
+echo "Your Nextcloud-DB password: "$NEXTCLOUDDBPASSWORD
+echo ""
+read -p "Enter your Nextcloud Administrator: " NEXTCLOUDADMINUSER
+echo "Your Nextcloud Administrator: "$NEXTCLOUDADMINUSER
+echo ""
+read -p "Enter your Nextcloud Administrator password: " NEXTCLOUDADMINUSERPASSWORD
+echo "Your Nextcloud Administrator password: "$NEXTCLOUDADMINUSERPASSWORD
+echo ""
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo ""
+echo " NEXTCLOUD will now be installed silently - be patient ..."
+sudo -u www-data php /var/www/nextcloud/occ maintenance:install --database "mysql" --database-name "nextcloud"  --database-user "$NEXTCLOUDDBUSER" --database-pass "$NEXTCLOUDDBPASSWORD" --admin-user "$NEXTCLOUDADMINUSER" --admin-pass "$NEXTCLOUDADMINUSERPASSWORD" --data-dir "/var/nc_data"
+declare -l YOURSERVERNAME
+###read the current hostname
+YOURSERVERNAME=$(hostname)
+sudo -u www-data cp /var/www/nextcloud/config/config.php /var/www/nextcloud/config/config.php.bak
+sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 0 --value=$YOURSERVERNAME
+sudo -u www-data sed -in 's/http:\/\/localhost/https:\/\/'$YOURSERVERNAME'/' /var/www/nextcloud/config/config.php
+echo ""
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+echo ""
+echo " Open your browser and call: https://$YOURSERVERNAME"
+echo""
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 exit 0
