@@ -97,9 +97,9 @@ apt install fail2ban -y
 touch /etc/fail2ban/filter.d/nextcloud.conf
 cat <<EOF >/etc/fail2ban/filter.d/nextcloud.conf
 [Definition]
-failregex=^{"reqId":".*","remoteAddr":".*","app":"core","message":"Login failed: '.*' \(Remote IP: '<HOST>'\)","level":2,"time":".*"}\$
-^{"reqId":".*","level":2,"time":".*","remoteAddr":".*","app":"core".*","message":"Login failed: '.*' \(Remote IP: '<HOST>'\)".*}\$
-^.*\"remoteAddr\":\"<HOST>\".*Trusted domain error.*\$
+failregex=^{"reqId":".*","remoteAddr":".*","app":"core","message":"Login failed: '.*' \(Remote IP: '<HOST>'\)","level":2,"time":".*"}$
+            ^{"reqId":".*","level":2,"time":".*","remoteAddr":".*","app":"core".*","message":"Login failed: '.*' \(Remote IP: '<HOST>'\)".*}$
+            ^.*\"remoteAddr\":\"<HOST>\".*Trusted domain error.*\$
 EOF
 ###create a fail2ban Nextcloud jail
 touch /etc/fail2ban/jail.d/nextcloud.local
