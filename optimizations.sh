@@ -86,6 +86,8 @@ array (
 'trashbin_retention_obligation' => 'auto, 7',
 );
 EOF
+###remove leading whitespaces
+sed -i 's/^[ ]*//' /var/www/nextcloud/config/config.php
 restart_all_services
 update_and_clean
 ###installfail2ban
