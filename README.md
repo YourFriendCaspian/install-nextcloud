@@ -9,6 +9,7 @@ The initial script (install-nextcloud.sh) will install your self hosted Nextclou
     OpenSSL 1.1.0 h
     PHP 7.2.4
     Redis-Server
+    self signed certificates or Let's Encrypt SSL
 
 The only precondition for this script is to use Ubuntu 16.04.4 LTS 64Bit as your server OS.
 
