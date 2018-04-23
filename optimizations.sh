@@ -1,8 +1,9 @@
 #######################################################
 # Carsten Rieger IT-Services
 # OPTIMIZATIONS.SH
-# Version 1.1
-# April 19th, 2018
+# Version 1.2
+# April 23rd, 2018
+# version 1.2: remove whitespaces from config.php
 # version 1.1: added functions
 # Version 1.0: initial script
 #######################################################
