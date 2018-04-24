@@ -563,6 +563,7 @@ ufw enable
 /usr/sbin/service redis-server restart
 sudo -u www-data php /var/www/nextcloud/occ app:disable survey_client
 sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
+sudo -u www-data php /var/www/nextcloud/occ app:enable admin_audit
 ###clean up redis-server
 redis-cli -s /var/run/redis/redis.sock <<EOF
 FLUSHALL
