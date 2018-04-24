@@ -1,8 +1,11 @@
 #######################################################
 # Carsten Rieger IT-Services
+# https://www.c-rieger.de
+# https://github.com/riegercloud
 # INSTALL-NEXTCLOUD.SH
-# Version 1.3
-# April 23rd, 2018
+# Version 1.4
+# April 24th, 2018
+# version 1.4: merged two scripts
 # version 1.3: Nextcloud will silently be installed
 # version 1.2: changed the process of creating the NC
 #              db/user, added mysql_secure_installation
@@ -564,6 +567,7 @@ quit
 EOF
 restart_all_services
 nextcloud_scan_data
+clear
 echo ""
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echo ""
