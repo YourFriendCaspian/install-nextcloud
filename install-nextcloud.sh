@@ -459,6 +459,7 @@ YOURSERVERNAME=$(hostname)
 sudo -u www-data cp /var/www/nextcloud/config/config.php /var/www/nextcloud/config/config.php.bak
 sudo -u www-data php /var/www/nextcloud/occ config:system:set trusted_domains 0 --value=$YOURSERVERNAME
 sudo -u www-data sed -in 's/http:\/\/localhost/https:\/\/'$YOURSERVERNAME'/' /var/www/nextcloud/config/config.php
+echo ""
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 ###backup of the effected file .user.ini
 cp /var/www/nextcloud/.user.ini /var/www/nextcloud/.user.ini.bak
@@ -560,6 +561,8 @@ ufw enable
 /usr/sbin/service ufw restart
 /usr/sbin/service fail2ban restart
 /usr/sbin/service redis-server restart
+sudo -u www-data php /var/www/nextcloud/occ app:disable survey_client
+sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
 ###clean up redis-server
 redis-cli -s /var/run/redis/redis.sock <<EOF
 FLUSHALL
