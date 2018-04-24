@@ -1,7 +1,4 @@
-# Carsten Rieger
-# https://www.c-rieger.de
-# https://github.com/riegercloud
-# install-nextcloud
+# Carsten Rieger - install Nextcloud usinge shell
 Install, optimize and harden your self hosted Nextcloud (based on Ubuntu 16.04.x LTS 64Bit) using two shell scripts only.
 
 The initial script (install-nextcloud.sh) will install and optimize your self hosted Nextcloud within few minutes fully automated. Your server will be built of:
