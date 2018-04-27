@@ -258,9 +258,6 @@ update_and_clean
 apt install redis-server php-redis -y
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
 ###adjust Redis_Server
-sed -i "s/port 6379/port 0/" /etc/redis/redis.conf
-sed -i s/\#\ unixsocket/\unixsocket/g /etc/redis/redis.conf
-sed -i "s/unixsocketperm 700/unixsocketperm 770/" /etc/redis/redis.conf
 sed -i "s/# maxclients 10000/maxclients 512/" /etc/redis/redis.conf
 usermod -a -G redis www-data
 cp /etc/sysctl.conf /etc/sysctl.conf.bak && sed -i '$avm.overcommit_memory = 1' /etc/sysctl.conf
