@@ -565,6 +565,7 @@ ufw enable
 sudo -u www-data php /var/www/nextcloud/occ app:disable survey_client
 sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
 sudo -u www-data php /var/www/nextcloud/occ app:enable admin_audit
+sudo -u www-data php /var/www/nextcloud/occ app:enable files_pdfviewer
 ###clean up redis-server
 redis-cli <<EOF
 FLUSHALL
