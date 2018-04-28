@@ -7,7 +7,7 @@ The initial script (install-nextcloud.sh) will install and optimize your self ho
     MariaDB
     Nextcloud 13.0.1
     NGINX 1.14
-    OpenSSL 1.1.0 h
+    OpenSSL 1.1.0h
     PHP 7.2.4
     Redis-Server
     self signed certificates or Let's Encrypt SSL
