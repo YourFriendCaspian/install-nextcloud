@@ -557,7 +557,7 @@ ufw allow 443/tcp
 ###open firewall port 22 for SSH
 ufw allow 22/tcp
 ###enable UFW (autostart)
-ufw enable
+ufw logging medium && ufw default deny incoming && ufw enable
 ###restart fail2ban, ufw and redis-server services
 /usr/sbin/service ufw restart
 /usr/sbin/service fail2ban restart
