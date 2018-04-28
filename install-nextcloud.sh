@@ -257,7 +257,9 @@ update_and_clean
 ###install Redis-Server
 apt install redis-server php-redis -y
 cp /etc/redis/redis.conf /etc/redis/redis.conf.bak
-###adjust Redis_Server
+sed -i "s/port 6379/port 0/" /etc/redis/redis.conf
+sed -i s/\#\ unixsocket/\unixsocket/g /etc/redis/redis.conf
+sed -i "s/unixsocketperm 700/unixsocketperm 770/" /etc/redis/redis.conf 
 sed -i "s/# maxclients 10000/maxclients 512/" /etc/redis/redis.conf
 usermod -a -G redis www-data
 cp /etc/sysctl.conf /etc/sysctl.conf.bak && sed -i '$avm.overcommit_memory = 1' /etc/sysctl.conf
@@ -510,8 +512,8 @@ array (
 'preview_max_scale_factor' => 1,
 'redis' =>
 array (
-'host' => 'localhost',
-'port' => 6379,
+'host' => '/var/run/redis/redis-server.sock',
+'port' => 0,
 'timeout' => 0.0,
 ),
 'quota_include_external_storage' => false,
@@ -567,7 +569,7 @@ sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
 sudo -u www-data php /var/www/nextcloud/occ app:enable admin_audit
 sudo -u www-data php /var/www/nextcloud/occ app:enable files_pdfviewer
 ###clean up redis-server
-redis-cli <<EOF
+redis-cli -s /var/run/redis/redis-server.sock <<EOF
 FLUSHALL
 quit
 EOF
