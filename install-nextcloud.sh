@@ -3,11 +3,12 @@
 # https://www.c-rieger.de
 # https://github.com/riegercloud
 # INSTALL-NEXTCLOUD.SH
-# Version 2.0
-# April 27th, 2018
+# Version 2.1
+# April 28th, 2018
 #######################################################
 # Ubuntu 16.04.4 or Ubuntu 18.04 LTS
 #######################################################
+# version 2.1: Redis-server using unixsocket
 # version 2.0: ready for Ubuntu 18.04 LTS 64Bit
 # version 1.4: merged two scripts
 # version 1.3: Nextcloud will silently be installed
