@@ -571,8 +571,8 @@ redis-cli <<EOF
 FLUSHALL
 quit
 EOF
-restart_all_services
 nextcloud_scan_data
+restart_all_services
 clear
 echo ""
 echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
