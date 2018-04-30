@@ -6,16 +6,7 @@
 # Version 2.1
 # April 28th, 2018
 #######################################################
-# Ubuntu 18.04 LTS
-#######################################################
-# version 2.1: Redis-server using unixsocket
-# version 2.0: ready for Ubuntu 18.04 LTS 64Bit
-# version 1.4: merged two scripts
-# version 1.3: Nextcloud will silently be installed
-# version 1.2: changed the process of creating the NC
-#              db/user, added mysql_secure_installation
-# version 1.1: added functions
-# Version 1.0: initial script
+# Ubuntu 16.04 LTS
 #######################################################
 #!/bin/bash
 ###global function to update and cleanup the environment
@@ -264,7 +255,7 @@ sed -i "s/unixsocketperm 700/unixsocketperm 770/" /etc/redis/redis.conf
 sed -i "s/# maxclients 10000/maxclients 512/" /etc/redis/redis.conf
 usermod -a -G redis www-data
 cp /etc/sysctl.conf /etc/sysctl.conf.bak && sed -i '$avm.overcommit_memory = 1' /etc/sysctl.conf
-# cp /etc/rc.local /etc/rc.local.bak && sed -i '$i \sysctl -w net.core.somaxconn=65535' /etc/rc.local
+cp /etc/rc.local /etc/rc.local.bak && sed -i '$i \sysctl -w net.core.somaxconn=65535' /etc/rc.local
 ###install self signed certificates
 apt install ssl-cert -y
 ###prepare NGINX for Nextcloud and SSL
@@ -513,7 +504,7 @@ array (
 'preview_max_scale_factor' => 1,
 'redis' =>
 array (
-'host' => '/var/run/redis/redis-server.sock',
+'host' => '/var/run/redis/redis.sock',
 'port' => 0,
 'timeout' => 0.0,
 ),
@@ -570,7 +561,7 @@ sudo -u www-data php /var/www/nextcloud/occ app:disable firstrunwizard
 sudo -u www-data php /var/www/nextcloud/occ app:enable admin_audit
 sudo -u www-data php /var/www/nextcloud/occ app:enable files_pdfviewer
 ###clean up redis-server
-redis-cli -s /var/run/redis/redis-server.sock <<EOF
+redis-cli -s /var/run/redis/redis.sock <<EOF
 FLUSHALL
 quit
 EOF
