@@ -6,7 +6,7 @@
 # Version 2.1
 # April 28th, 2018
 #######################################################
-# Ubuntu 16.04 LTS
+# Ubuntu 16.04.4 LTS
 #######################################################
 #!/bin/bash
 ###global function to update and cleanup the environment
