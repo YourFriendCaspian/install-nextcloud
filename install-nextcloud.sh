@@ -3,7 +3,7 @@
 # https://www.c-rieger.de
 # https://github.com/riegercloud
 # INSTALL-NEXTCLOUD.SH
-# Version 2.1
+# Version 3.0
 # April 30th, 2018
 #######################################################
 # Ubuntu 18.04 LTS
