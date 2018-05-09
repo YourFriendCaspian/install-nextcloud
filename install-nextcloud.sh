@@ -462,7 +462,6 @@ cp /var/www/nextcloud/.user.ini /var/www/nextcloud/.user.ini.bak
 sudo -u www-data sed -i "s/upload_max_filesize=.*/upload_max_filesize=10240M/" /var/www/nextcloud/.user.ini
 sudo -u www-data sed -i "s/post_max_size=.*/post_max_size=10240M/" /var/www/nextcloud/.user.ini
 sudo -u www-data sed -i "s/output_buffering=.*/output_buffering='Off'/" /var/www/nextcloud/.user.ini
-sudo -u www-data cp /var/www/nextcloud/config/config.php /var/www/nextcloud/config/config.php.bak
 sudo -u www-data php /var/www/nextcloud/occ background:cron
 ###apply optimizations to Nextclouds global config.php
 sed -i '/);/d' /var/www/nextcloud/config/config.php
