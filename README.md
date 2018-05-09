@@ -5,10 +5,10 @@ The initial script (install-nextcloud.sh) will install and optimize your self ho
 
     Fail2Ban (Nextcloud and SSH jails)
     MariaDB
-    Nextcloud 13.0.1
+    Nextcloud 13.0.2
     NGINX 1.14
     OpenSSL 1.1.0h
-    PHP 7.2.4
+    PHP 7.2.5
     Redis-Server
     self signed certificates or Let's Encrypt SSL
     UFW (22, 80, 443)
